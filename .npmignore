@@ -1,0 +1,8 @@
+# Source files
+src/
+
+# Build scripts
+gulpfile.js
+
+# npm packages
+*.tgz
