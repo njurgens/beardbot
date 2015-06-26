@@ -25,5 +25,8 @@
   },
   "dependencies": {
     "express": "^4.13.0"
+  },
+  "scripts": {
+    "prepublish": "gulp build"
   }
 }
