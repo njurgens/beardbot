@@ -5,7 +5,8 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "gulp build",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -25,9 +26,7 @@
     "gulp-watch": "^4.2.4"
   },
   "dependencies": {
-    "express": "^4.13.0"
-  },
-  "scripts": {
-    "prepublish": "gulp build"
+    "express": "^4.13.0",
+    "telegram-bot": "file:../telegram-bot/telegram-bot-0.3.1.tgz"
   }
 }
