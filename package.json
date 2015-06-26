@@ -2,6 +2,7 @@
   "name": "beardbot",
   "version": "0.1.0",
   "description": "A Telegram chat bot",
+  "private": true,
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
