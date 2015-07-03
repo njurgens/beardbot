@@ -37,6 +37,7 @@ class Poller { constructor() {
 
             if (json.ok !== true) {
                 console.warn('API returned non-ok response!');
+                console.dir(json);
                 return next();
             }
 
