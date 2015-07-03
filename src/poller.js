@@ -5,6 +5,7 @@
 
 import api from './api';
 import async from 'async';
+import config from './config';
 import CommandDispatcher from './dispatcher';
 
 var CMD_RE = /^\/([^\s]+)\s*(.*)?/;
@@ -16,7 +17,7 @@ class Poller { constructor() {
 
     poll(next) {
         const limit = 100,
-            timeout = 10,
+            timeout = config.long_poll_timeout,
             offset = this._offset;
 
         api.getUpdates({
