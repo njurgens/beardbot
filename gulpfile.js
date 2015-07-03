@@ -19,7 +19,9 @@ gulp.task('default', ['build']);
 gulp.task('build', function() {
     return gulp.src('src/**/*.js')
         .pipe(plumber(handle_compiler_error))
-        .pipe(babel())
+        .pipe(babel({
+            optional: ['runtime']
+        }))
         .pipe(debug({title: 'build'}))
         .pipe(gulp.dest('dist'));
 });
@@ -28,7 +30,9 @@ gulp.task('watch', function() {
     return gulp.src('src/**/*.js')
         .pipe(plumber(handle_compiler_error))
         .pipe(watch('src/**/*.js'))
-        .pipe(babel())
+        .pipe(babel({
+            optional: ['runtime']
+        }))
         .pipe(debug({title: 'watch'}))
         .pipe(gulp.dest('dist'));
 });
