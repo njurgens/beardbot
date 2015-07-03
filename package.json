@@ -26,7 +26,12 @@
     "gulp-watch": "^4.2.4"
   },
   "dependencies": {
+    "async": "^1.3.0",
+    "body-parser": "^1.13.1",
     "express": "^4.13.0",
-    "telegram-bot": "file:../telegram-bot/telegram-bot-0.3.1.tgz"
-  }
+    "telegram-bot": "^0.3.1"
+  },
+  "bundledDependencies": [
+	"telegram-bot"
+  ]
 }

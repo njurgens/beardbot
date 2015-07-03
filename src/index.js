@@ -3,24 +3,27 @@
  */
 'use strict';
 
-import app from './app';
+import Poller from './poller';
 import api from './api';
-import config from '../config';
 
-api.debug = true;
+let poller = new Poller();
 
-let server = app.listen(3000, function() {
-    let host = server.address().address,
-        port = server.address().port;
+poller.dispatcher
+    .register('ping', (text, message) => {
+        console.dir(message);
+        return 'pong';
+    })
+    .register('me', (text, message) => {
+        console.dir(message);
 
-    console.log('listening at http://%s:%s', host, port);
+        if (!text.length) {
+            return null;
+        }
 
-    api.api_key = config.api_key;
-    api.setWebhook(config.update_uri, function(err, resp, body) {
-        console.dir(body);
+        let {first_name, last_name} = message.from;
+        let name = last_name ? `${first_name} ${last_name}` : first_name;
+
+        return `${name} ${text}`;
     });
 
-    app.post('/updates', function(err, resp, body) {
-        console.dir(body);
-    });
-});
+poller.start();
