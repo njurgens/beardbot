@@ -28,3 +28,7 @@ node_modules
 
 # Build directory
 dist/
+
+# Vim temp files
+*.swo
+*.swp
