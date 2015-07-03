@@ -4,7 +4,7 @@
 'use strict';
 
 import Api from 'telegram-bot';
-import config from '../config';
+import config from './config';
 
 let api = new Api();
 
