@@ -27,6 +27,12 @@ poller.dispatcher
         let name = last_name ? `${first_name} ${last_name}` : first_name;
 
         return `${name} ${text}`;
+    })
+    .register('flip', (text, message) => {
+        return '(╯°□°）╯︵ ┻━┻';
+    })
+    .register('flop', (text, message) => {
+        return '┬─┬ノ( º _ ºノ)';
     });
 
 poller.start();
