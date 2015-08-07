@@ -13,6 +13,9 @@ poller.dispatcher
         console.dir(message);
         return 'pong';
     })
+    .register('marco', (text, message) => {
+        return 'polo';
+    })
     .register('me', (text, message) => {
         console.dir(message);
 
