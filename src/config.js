@@ -10,7 +10,8 @@ const config_dir = path.join(process.env.HOME, '.beardbot'),
     config_file = path.join(config_dir, 'config.json'),
     default_config = {
         api_key: '',
-        long_poll_timeout: 60
+        long_poll_timeout: 60,
+        db: path.join(config_dir, 'beardbot.db')
     };
 
 let config = {};

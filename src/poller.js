@@ -10,7 +10,8 @@ import CommandDispatcher from './dispatcher';
 
 var CMD_RE = /^\/([^\s]+)\s*(.*)?/;
 
-class Poller { constructor() {
+class Poller {
+    constructor() {
         this._last_update = 0;
         this.dispatcher = new CommandDispatcher();
     }
@@ -63,14 +64,28 @@ class Poller { constructor() {
         message.text = message.text.replace(/[\r\n]+/g, ' ');
 
         let parsed_cmd = CMD_RE.exec(message.text);
-        if (!parsed_cmd) {
-            console.warn('unrecognized format');
-            return;
-        }
-        parsed_cmd[2] = parsed_cmd[2] || '';
+        let response = null;
+        try {
+            // scanners should run on all message text
+            this.dispatcher.scan(message.text, message);
 
-        let response =
-            this.dispatcher.dispatch(parsed_cmd[1], parsed_cmd[2], message);
+            // run tasks based on 
+            if (parsed_cmd) {
+                parsed_cmd[2] = parsed_cmd[2] || '';
+                response = this.dispatcher.dispatch(parsed_cmd[1], parsed_cmd[2],
+                                                    message);
+            }
+            else {
+                response = this.dispatcher.any(message.text, message);
+            }
+        }
+        catch (err) {
+            response = 'Well, you broke something.  Great job.';
+            console.log('Caught an exception when processing the following message:');
+            console.dir(message);
+            console.log(err.stack);
+        }
+        console.log('processing don');
 
         if (response) {
             api.sendMessage({

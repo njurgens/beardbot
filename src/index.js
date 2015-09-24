@@ -3,36 +3,35 @@
  */
 'use strict';
 
+import random from 'random-js';
+
 import Poller from './poller';
 import api from './api';
+
+import {flip, flop} from './commands/flipflop';
+import marco from './commands/marco';
+import me from './commands/me';
+import ping from './commands/ping';
+import roll from './commands/roll';
+
+import gasp from './nanny/gasp';
+import thumbs from './nanny/thumbs';
+
+import * as karma from './scanners/karma';
+
 
 let poller = new Poller();
 
 poller.dispatcher
-    .register('ping', (text, message) => {
-        console.dir(message);
-        return 'pong';
-    })
-    .register('marco', (text, message) => {
-        return 'polo';
-    })
-    .register('me', (text, message) => {
-        console.dir(message);
-
-        if (!text.length) {
-            return null;
-        }
-
-        let {first_name, last_name} = message.from;
-        let name = last_name ? `${first_name} ${last_name}` : first_name;
-
-        return `${name} ${text}`;
-    })
-    .register('flip', (text, message) => {
-        return '(╯°□°）╯︵ ┻━┻';
-    })
-    .register('flop', (text, message) => {
-        return '┬─┬ノ( º _ ºノ)';
-    });
+    .register('ping', ping)
+    .register('marco', marco)
+    .register('me', me)
+    .register('flip', flip)
+    .register('flop', flop)
+    .register('roll', roll)
+    .register(gasp)
+    .register(thumbs)
+    .register(karma.scanner, {async: true})
+    .register('karma', karma.command);
 
 poller.start();
