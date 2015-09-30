@@ -34,26 +34,73 @@ class CommandDispatcher {
         this._scanners.forEach(fn => process.nextTick(() => fn(text, message)));
     }
 
-    register() {
-        // if a function is passed as the first argument, then it runs against
-        // all messages
-        if (typeof arguments[0] === 'function') {
-            // scanners are special in they should always run and do not
-            // return a response
-            if (typeof arguments[1] === 'object' && arguments[1].async === true) {
-                this._scanners.push(arguments[0]);
-            }
-            else {
-                this._any.push(arguments[0]);
-            }
-        }
-        // if a string is passed as the first argument and a function as the second,
-        // register the function to run whenever that string appears as a command
-        else if (typeof arguments[0] === 'string' && typeof arguments[1] === 'function') {
-            this._commands[arguments[0]] = arguments[1];
+    /**
+     * Register a collection of commands.
+     *
+     * @param {Object} container
+     *      An Object containing commands and their handlers.
+     * @returns {CommandDispatcher}
+     *      Returns this CommandDispatcher.
+     */
+    register_commands(container) {
+        _(container).each((fn, key) => {
+            this._commands[key] = fn;
+        }).value();
+        return this;
+    }
+
+    /**
+     * Register a collection of asynchronos scanners.
+     *
+     * @param {Array} container
+     *      An Array containing scanners to execute on each message.
+     * @returns {CommandDispatcher}
+     *      Returns this CommandDispatcher.
+     */
+    register_async_scanners(container) {
+        _(container).each((fn) => {
+            // TODO: rename scanners to async_scanners
+            this._scanners.push(fn);
+        }).value();
+        return this;
+    }
+
+    /**
+     * Register a collection of synchronos scanners.
+     *
+     * @param {Array} container
+     *      An Array containing scanners to execute on each message.
+     * @returns {CommandDispatcher}
+     *      Returns this CommandDispatcher.
+     */
+    register_sync_scanners(container) {
+        _(container).each((fn) => {
+            // TODO: rename any to sync_scanners
+            this._any.push(fn);
+        }).value();
+        return this;
+    }
+
+    /**
+     * Register a collection of plugins.
+     *
+     * @param {Object} container
+     *      An Array or Object containing commands or scanners.  Contains
+     *      commands in the case of an Object and scanners in the case of an
+     *      Arrays.
+     * @returns {CommandDispatcher}
+     *      Returns this CommandDispatcher.
+     */
+    register(container, {async=false}={}) {
+        if (container instanceof Array && async) {
+            return this.register_async_scanners(container);
         }
 
-        return this;
+        if (container instanceof Array && !async) {
+            return this.register_sync_scanners(container);
+        }
+
+        return this.register_commands(container);
     }
 }
 
