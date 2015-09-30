@@ -1,43 +1,80 @@
 /*
+ * Module for loading and writing configuration files.
+ *
  * Copyright (c) 2015 Nick Jurgens <nicholas2010081@gmail.com>
  */
 'use strict';
 
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 
-const config_dir = path.join(process.env.HOME, '.beardbot'),
-    config_file = path.join(config_dir, 'config.json'),
-    default_config = {
-        api_key: '',
-        long_poll_timeout: 60,
-        db: path.join(config_dir, 'beardbot.db')
-    };
 
-let config = {};
+/**
+ * Load configuration from file.
+ *
+ * @param {string} file - Path to configuration file.
+ * @param {Object} default_config - Default configuration values.
+ * @returns {Object} Parsed contents of file.
+ */
+function load_config(file, default_config) {
+    let config = null;
 
-try {
+    // if the config file does not exist or can't be parsed,
+    // write a config file with the default config
+    try {
+        config = JSON.parse(fs.readFileSync(file));
+    } catch (e) {
+        write_config(default_config, config_file);
+        config = default_config;
+    }
+
+    // overwrite defaults with loaded config
+    config = Object.assign({}, default_config, config);
+
+    // configuration must contain a valid API key
+    validate_api_key(config, file);
+
+    return config;
 }
-catch (e) {
-    console.dir(e);
+
+
+/**
+ * Write configuration to a file.
+ *
+ * @param {Object} config - Object containing config to serialize and write
+ *                          to file.
+ * @param {string} file - Path to configuration file.
+ */
+function write_config(config, file) {
+    try {
+        fs.mkdirSync(path.dirname(file));
+    } catch (e) { }
+
+    fs.writeFileSync(file, JSON.stringify(config, null, 2));
 }
 
-try {
-    config = JSON.parse(fs.readFileSync(config_file));
-}
-catch (e) {
-    try { fs.mkdirSync(config_dir); } catch (e) { }
 
-    fs.writeFileSync(config_file, JSON.stringify(default_config, null, 2));
-}
-
-config = Object.assign(default_config, config);
-
-if (!config.api_key.length) {
-    throw Error(`API key not found in config! Add it to ${config_file}.`);
+/**
+ * Check config contains valid API key.
+ *
+ * @param {Object} config - Object containing configuration.
+ * @throws {Error} API key must be valid.
+ */
+function validate_api_key(config, file) {
+    if (!config.api_key.length) {
+        throw Error(`API key not found in config! Add it to ${file}.`);
+    }
 }
 
-console.log('loaded API key from config');
-console.log('long-poll timeout set to %d', config.long_poll_timeout);
 
-export default config;
+// the config file and database are located at ~/.beardbot
+const config_dir = path.join(process.env.HOME, '.beardbot');
+const config_file = path.join(config_dir, 'config.json');
+const default_config = {
+    api_key: '',
+    long_poll_timeout: 60,
+    db: path.join(config_dir, 'beardbot.db')
+};
+
+
+export default load_config(config_file, default_config);
