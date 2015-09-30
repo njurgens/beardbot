@@ -6,7 +6,6 @@
 import random from 'random-js';
 
 import Poller from './poller';
-import api from './api';
 
 import {flip, flop} from './commands/flipflop';
 import marco from './commands/marco';

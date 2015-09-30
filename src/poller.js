@@ -3,15 +3,19 @@
  */
 'use strict';
 
-import api from './api';
+import Api from 'telegram-bot';
 import async from 'async';
+
 import config from './config';
 import CommandDispatcher from './dispatcher';
 
-var CMD_RE = /^\/([^\s]+)\s*(.*)?/;
+let CMD_RE = /^\/([^\s]+)\s*(.*)?/;
+
 
 class Poller {
+
     constructor() {
+        this._api = new Api(config.api_key);
         this._last_update = 0;
         this.dispatcher = new CommandDispatcher();
     }
@@ -21,7 +25,7 @@ class Poller {
             timeout = config.long_poll_timeout,
             offset = this._offset;
 
-        api.getUpdates({
+        this._api.getUpdates({
             offset,
             limit,
             timeout
@@ -88,7 +92,7 @@ class Poller {
         console.log('processing don');
 
         if (response) {
-            api.sendMessage({
+            this._api.sendMessage({
                 chat_id: message.chat.id,
                 text: response
             });
@@ -97,10 +101,6 @@ class Poller {
 
     start(commands) {
         async.forever((next) => this.poll(next));
-    }
-
-    init(commands) {
-
     }
 
     get _offset() {
