@@ -48,9 +48,8 @@ gulp.task('watch', ['build'], function() {
 
 gulp.task('test', function(cb) {
     return gulp.src('dist/tests/**/*.js')
-        .pipe(plumber(handle_jasmine_error))
-        .pipe(jasmine())
-        .pipe(debug({title: 'jasmine'}));
+        .pipe(debug({title: 'test'}))
+        .pipe(jasmine());
 });
 
 function handle_compiler_error(err) {
