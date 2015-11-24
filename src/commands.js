@@ -11,6 +11,7 @@ import marco from './plugins/marco';
 import me from './plugins/me';
 import ping from './plugins/ping';
 import roll from './plugins/roll';
+import {shrug} from './plugins/shrug';
 
 export default {
     flip,
@@ -19,5 +20,6 @@ export default {
     marco,
     me,
     ping,
-    roll
+    roll,
+    shrug
 };
