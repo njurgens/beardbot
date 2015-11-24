@@ -6,7 +6,7 @@
 'use strict';
 
 import {flip, flop} from './plugins/flipflop';
-import {cmd as karma} from './plugins/karma.js';
+import {command as karma} from './plugins/karma.js';
 import marco from './plugins/marco';
 import me from './plugins/me';
 import ping from './plugins/ping';

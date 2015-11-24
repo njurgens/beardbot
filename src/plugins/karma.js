@@ -42,14 +42,14 @@ export function scanner(text, message) {
     }
 
     let incr = _(text.match(incr_re) || [])
-        .uniq()
         .map(name => name.replace('++', ''))
         .value();
     let decr = _(text.match(decr_re) || [])
-        .uniq()
         .map(name => name.replace('--', ''))
         .value();
-    let changed = _(incr).concat(decr).value();
+    let changed = _(incr).concat(decr)
+        .uniq()
+        .value();
 
     // initialize names karma to zero
     // TODO: turn karma_cache into a default dict using Proxy
