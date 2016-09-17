@@ -12,6 +12,8 @@ import me from './plugins/me';
 import ping from './plugins/ping';
 import roll from './plugins/roll';
 import {shrug} from './plugins/shrug';
+import {face} from './plugins/face';
+import jobs from './plugins/jobs';
 
 export default {
     flip,
@@ -21,5 +23,7 @@ export default {
     me,
     ping,
     roll,
-    shrug
+    shrug,
+    jobs,
+    face
 };
