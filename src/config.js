@@ -67,13 +67,11 @@ function validate_api_key(config, file) {
 }
 
 
-// the config file and database are located at ~/.beardbot
-const config_dir = path.join(process.env.HOME, '.beardbot');
-const config_file = path.join(config_dir, 'config.json');
+const config_file = '/etc/beardbot/config.json';
 const default_config = {
     api_key: '',
     long_poll_timeout: 60,
-    db: path.join(config_dir, 'beardbot.db')
+    db: '/var/beardbot/beardbot.db'
 };
 
 
