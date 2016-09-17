@@ -12,10 +12,11 @@ let db_schema = 'CREATE TABLE IF NOT EXISTS karma (name TEXT PRIMARY KEY, karma 
     db_load_all_karma = 'SELECT name, karma FROM karma',
     db_init = false;
 
-let incr_re = /[^\s]+\+\+|\+\+[^\s]+/,
-    decr_re = /[^\s]+--|--[^\s]+/,
-    name_re = /[^\s]+/,
-    karma_cache = {};
+let karma_cache = {};
+
+export const POST_INCR_RE = /[^\s]+\+\+/g;
+export const POST_DECR_RE = /[^\s]+--/g;
+export const NAME_RE = /[^\s]+/;
 
 
 function init_table() {
@@ -41,10 +42,10 @@ export function scanner(text, message) {
         return database.on('open', () => scanner(text, message));
     }
 
-    let incr = _(text.match(incr_re) || [])
+    let incr = _(text.match(POST_INCR_RE) || [])
         .map(name => name.replace('++', ''))
         .value();
-    let decr = _(text.match(decr_re) || [])
+    let decr = _(text.match(POST_DECR_RE) || [])
         .map(name => name.replace('--', ''))
         .value();
     let changed = _(incr).concat(decr)
@@ -87,7 +88,11 @@ export function command(text, message) {
         name = username;
     }
     else {
-        name = text.match(name_re);
+        name = text.match(NAME_RE)[0];
+    }
+
+    if (name.toLowerCase() === 'php') {
+        return `karma for ${name} is -Infinity`;
     }
 
     return `karma for ${name} is ${karma_cache[name] || 0}`;
